@@ -103,3 +103,15 @@ int tree_node_count(TreeNode *t){
 	}
 	return cnt;
 }
+
+int tree_depth(TreeNode* root){
+	int res = 1;
+
+	if (root->left){
+		res += tree_depth(root->left);
+	}else if (root->right){
+		res += tree_depth(root->right);
+	}
+
+	return res;
+}

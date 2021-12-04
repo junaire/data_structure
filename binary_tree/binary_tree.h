@@ -21,6 +21,7 @@ void tree_inorder_print(TreeNode *t);
 
 void tree_postorder_print(TreeNode *t);
 
+int tree_depth(TreeNode* t);
 void tree_delete_node(TreeNode **t, TYPE val);
 
 TreeNode* node_create(int val);
