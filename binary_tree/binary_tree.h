@@ -8,12 +8,18 @@ typedef struct TreeNode{
 }TreeNode;
 
 #define TYPE int
-
+#define END  -1
 int tree_node_count(TreeNode *t);
 
-void tree_insert(TreeNode **t, TYPE val);
+void tree_balance_insert(TreeNode **t, TYPE val);
 
-void tree_print(TreeNode *t);
+void tree_create_by_sequence(TreeNode** t);
+
+void tree_preorder_print(TreeNode *t);
+
+void tree_inorder_print(TreeNode *t);
+
+void tree_postorder_print(TreeNode *t);
 
 void tree_delete_node(TreeNode **t, TYPE val);
 
