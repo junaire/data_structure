@@ -5,6 +5,7 @@ project(data_structure)
 add_subdirectory(doubly_linked_list)
 add_subdirectory(sequence_list)
 add_subdirectory(stack)
+add_subdirectory(string)
 # add_subdirectory(binary_tree)
 
 
