@@ -6,7 +6,8 @@ add_subdirectory(doubly_linked_list)
 add_subdirectory(sequence_list)
 add_subdirectory(stack)
 add_subdirectory(string)
-# add_subdirectory(binary_tree)
+add_subdirectory(haffman_tree)
+add_subdirectory(binary_tree)
 
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
