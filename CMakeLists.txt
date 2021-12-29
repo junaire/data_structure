@@ -8,6 +8,7 @@ add_subdirectory(stack)
 add_subdirectory(string)
 add_subdirectory(haffman_tree)
 add_subdirectory(binary_tree)
+add_subdirectory(graph)
 
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
