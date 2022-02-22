@@ -12,14 +12,14 @@ typedef struct {
   size_t len;
 } Stack;
 
-Stack* stack_init();
+Stack* jun_stack_init();
 
-void stack_push(Stack* stack, TYPE value);
+void jun_stack_push(Stack* stack, TYPE value);
 
-TYPE stack_pop(Stack* stack);
+TYPE jun_stack_pop(Stack* stack);
 
-TYPE stack_top(Stack* stack);
+TYPE jun_stack_top(Stack* stack);
 
-int stack_empty(Stack* stack);
+int jun_stack_empty(Stack* stack);
 
 #endif
