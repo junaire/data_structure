@@ -22,4 +22,6 @@ TYPE jun_stack_top(Stack* stack);
 
 int jun_stack_empty(Stack* stack);
 
+void jun_stack_destroy(Stack* stack);
+
 #endif

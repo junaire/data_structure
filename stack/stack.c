@@ -1,6 +1,5 @@
 #include "stack.h"
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +17,7 @@ void jun_stack_push(Stack* stack, TYPE value) {
    * First time allocate memory
    */
   if (stack->len == 0) {
-    stack->data = malloc(sizeof(int) * CHUNK_SZIE);
+    stack->data = malloc(sizeof(TYPE) * CHUNK_SZIE);
     stack->cap = CHUNK_SZIE;
   } else if (stack->len == stack->cap) {
     /*
@@ -32,17 +31,17 @@ void jun_stack_push(Stack* stack, TYPE value) {
   stack->len++;
 }
 
-TYPE jun_stack_top(Stack* stack) {
-  assert(stack->len == 0);
-  size_t pos = stack->len - 1;
-  return stack->data[pos];
-}
+TYPE jun_stack_top(Stack* stack) { return stack->data[stack->len - 1]; }
 
 TYPE jun_stack_pop(Stack* stack) {
-  assert(stack->data == NULL);
   TYPE data = jun_stack_top(stack);
   stack->len--;
   return data;
 }
 
 int jun_stack_empty(Stack* stack) { return stack->len == 0 ? 1 : 0; }
+
+void jun_stack_destroy(Stack* stack) {
+  free(stack->data);
+  free(stack);
+}
