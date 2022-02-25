@@ -31,4 +31,6 @@ int main() {
   jun_vector_sort(vector);
   printf("vector after sort:\n");
   jun_vector_print(vector);
+
+  jun_vector_destroy(vector);
 }

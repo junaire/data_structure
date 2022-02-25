@@ -24,4 +24,6 @@ int main() {
 
   jun_stack_empty(stack) ? printf("Stack empty!\n")
                          : printf("Stack not empty\n");
+
+  jun_stack_destroy(stack);
 }

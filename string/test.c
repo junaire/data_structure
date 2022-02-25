@@ -17,4 +17,7 @@ int main() {
 
   jun_str_cat(a, b);
   jun_str_print(a);
+
+  jun_str_destroy(a);
+  jun_str_destroy(b);
 }

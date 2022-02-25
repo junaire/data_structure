@@ -28,4 +28,6 @@ int main() {
 
   jun_list_append(list, 1);
   jun_list_print(list);
+
+  jun_list_destroy(list);
 }
