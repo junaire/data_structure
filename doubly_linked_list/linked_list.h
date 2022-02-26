@@ -38,9 +38,9 @@ int jun_list_node_index(List *list, TYPE value);
 
 void jun_list_reverse(List *list);
 
+// Note that index starts from 0
 void jun_list_partial_reverse(List *list, int beg, int end);
 
-// sort the list, flag
 void jun_list_sort(List *list);
 
 int jun_list_node_count(List *list, TYPE value);

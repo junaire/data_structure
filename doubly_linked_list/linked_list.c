@@ -135,3 +135,55 @@ int jun_list_node_count(List *list, TYPE value) {
   }
   return cnt;
 }
+
+void jun_list_partial_reverse(List *list, int beg, int end) {
+  if (beg >= end) {
+    return;
+  }
+  if (beg < 0 || end >= list->length) {
+    return;
+  }
+
+  Node *beg_node = list->head;
+  int index = 0;
+
+  while (index++ < beg) {
+    beg_node = beg_node->next;
+  }
+
+  Node *end_node = beg_node->next;
+
+  while (index++ < end) {
+    end_node = end_node->next;
+  }
+
+  /*
+   +-------------------------------------+
+   | beg_node | 1 | 2 | 3 | 4 | end_node |
+   +-------------------------------------+
+   */
+
+  while ((beg_node != end_node->prev) && (beg_node->next != end_node->prev)) {
+    TYPE tmp = beg_node->value;
+    beg_node->value = end_node->value;
+    end_node->value = tmp;
+
+    beg_node = beg_node->next;
+    end_node = end_node->prev;
+  }
+}
+
+void jun_list_reverse(List *list) {
+  Node *beg_node = list->head;
+  Node *end_node = list->tail;
+
+  while ((beg_node != end_node->prev) && (beg_node->next != end_node->prev)) {
+    TYPE tmp = beg_node->value;
+    beg_node->value = end_node->value;
+    end_node->value = tmp;
+
+    beg_node = beg_node->next;
+    end_node = end_node->prev;
+  }
+}
+
