@@ -26,22 +26,22 @@ typedef struct {
 
 } Graph;
 
-Graph* Graph_create(GraphKind kind);
+Graph* graph_create(GraphKind kind);
 
-void Graph_destroy(Graph* graph);
+void graph_destroy(Graph* graph);
 
-VexNode Graph_getVex(Graph* graph, int v);
+VexNode graph_getvex(Graph* graph, int v);
 
-void Graph_putVex(Graph* graph, int v, VexValueType value);
+void graph_putvex(Graph* graph, int v, VexValueType value);
 
-ArcNode* Graph_getFirstArc(Graph* graph, int v);
+ArcNode* graph_get_first_arc(Graph* graph, int v);
 
-void Graph_insertVex(Graph* graph, VexNode* vex);
+void graph_insertvex(Graph* graph, VexNode* vex);
 
-void Graph_deleteVex(Graph* graph, int v);
+void graph_deletevex(Graph* graph, int v);
 
-void Graph_insertArc(Graph* graph, int v, int w);
+void graph_insertarc(Graph* graph, int v, int w);
 
-void Graph_deleteArc(Graph* graph, int v, int w);
+void graph_deletearc(Graph* graph, int v, int w);
 
 #endif
