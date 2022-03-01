@@ -3,115 +3,125 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-TreeNode* node_create(TYPE val){
-	TreeNode *node = (TreeNode *)malloc(sizeof(TreeNode));
-	if(!node) return NULL;
-	node -> left  = NULL;
-	node -> right = NULL;
-	node -> value = val;
-	return node;
+TreeNode *jun_node_create(TYPE val) {
+  TreeNode *node = (TreeNode *)malloc(sizeof(TreeNode));
+  if (!node) return NULL;
+  node->left = NULL;
+  node->right = NULL;
+  node->value = val;
+  return node;
 }
 
-void tree_balance_insert(TreeNode **t, TYPE val){
-	if(val < ((*t) -> value)){
-		if((*t) -> left  == NULL){
-			TreeNode *node = node_create(val);
-			(*t) -> left = node;
-		}else{
-			tree_balance_insert(&((*t) -> left),val);
-		}
+void jun_tree_balance_insert(TreeNode **t, TYPE val) {
+  if (val < ((*t)->value)) {
+    if ((*t)->left == NULL) {
+      TreeNode *node = jun_node_create(val);
+      (*t)->left = node;
+    } else {
+      jun_tree_balance_insert(&((*t)->left), val);
+    }
 
-	}else if(val > ((*t) -> value)){
-		if((*t) -> right  == NULL){
-			TreeNode *node = node_create(val);
-			(*t) -> right = node;
-		}else{
-			tree_balance_insert(&((*t) -> right), val);
-		}
-	}
+  } else if (val > ((*t)->value)) {
+    if ((*t)->right == NULL) {
+      TreeNode *node = jun_node_create(val);
+      (*t)->right = node;
+    } else {
+      jun_tree_balance_insert(&((*t)->right), val);
+    }
+  }
 }
 
-void tree_create_by_sequence(TreeNode** tree){
-	int ch;
-	scanf("%d",&ch);
+void jun_tree_create_by_sequence(TreeNode **tree) {
+  int ch;
+  scanf("%d", &ch);
 
-	if (ch == END){
-		// END means this node doesn't exist.
-		*tree = NULL;
-	}else{
-		*tree = node_create(ch);
-		tree_create_by_sequence(&((*tree)->left));
-		tree_create_by_sequence(&((*tree)->right));
-	}
+  if (ch == END) {
+    // END means this node doesn't exist.
+    *tree = NULL;
+  } else {
+    *tree = jun_node_create(ch);
+    jun_tree_create_by_sequence(&((*tree)->left));
+    jun_tree_create_by_sequence(&((*tree)->right));
+  }
 }
 
-TreeNode* tree_search(TreeNode **t, TYPE key){
-	if(key < ((*t) -> value)){
-		if((*t) -> left  == NULL){
-			return NULL;
-		}else
-			return tree_search(&((*t) -> left), key);
+TreeNode *jun_tree_search(TreeNode **t, TYPE key) {
+  if (key < ((*t)->value)) {
+    if ((*t)->left == NULL) {
+      return NULL;
+    } else
+      return jun_tree_search(&((*t)->left), key);
 
-	}else if(key > ((*t) -> value)){
-		if((*t) -> right  == NULL){
-			return NULL;
-		}else
-			return tree_search(&((*t) -> right), key);
-	}else{
-		return *t;
-	}
+  } else if (key > ((*t)->value)) {
+    if ((*t)->right == NULL) {
+      return NULL;
+    } else
+      return jun_tree_search(&((*t)->right), key);
+  } else {
+    return *t;
+  }
 }
 
-void tree_preorder_print(TreeNode *t){
-	printf("%d\n",t-> value);
-	if(t -> left){
-		tree_preorder_print(t->left);
-	}
-	if(t->right){
-		tree_preorder_print(t->right);
-	}
+void jun_tree_preorder_visit(TreeNode *t) {
+  printf("%d\n", t->value);
+  if (t->left) {
+    tree_preorder_print(t->left);
+  }
+  if (t->right) {
+    tree_preorder_print(t->right);
+  }
 }
 
-void tree_inorder_print(TreeNode *t){
-	if(t -> left){
-		tree_inorder_print(t->left);
-	}
-	printf("%d\n",t-> value);
-	if(t->right){
-		tree_inorder_print(t->right);
-	}
+void jun_tree_inorder_visit(TreeNode *t) {
+  if (t->left) {
+    jun_tree_inorder_visit(t->left);
+  }
+  printf("%d\n", t->value);
+  if (t->right) {
+    jun_tree_inorder_visit(t->right);
+  }
 }
 
-void tree_postorder_print(TreeNode *t){
-	if(t -> left){
-		tree_preorder_print(t->left);
-	}
-	if(t->right){
-		tree_preorder_print(t->right);
-	}
-	printf("%d\n",t-> value);
+void jun_tree_postorder_visit(TreeNode *t) {
+  if (t->left) {
+    jun_tree_preorder_visit(t->left);
+  }
+  if (t->right) {
+    jun_tree_preorder_visit(t->right);
+  }
+  printf("%d\n", t->value);
 }
 
-int tree_node_count(TreeNode *t){
-	int cnt = 0;
-	if(t -> left){
-		++cnt;
-	}
-	if(t -> right){
-		++cnt;
-	}
-	return cnt;
+int jun_tree_leaf_node_count(TreeNode *t) {
+  static int cnt = 0;
+  if (t != NULL) {
+    if (t->left == NULL && t->right == NULL) {
+      cnt++;
+    }
+    jun_tree_leaf_node_count(t->left);
+    jun_tree_leaf_node_count(t->right);
+  }
+
+  return cnt;
 }
 
-int tree_depth(TreeNode* root){
-	int res = 1;
+int jun_tree_node_count(TreeNode *t) {
+  static int count = 0;
+  if (t != NULL) {
+    count++;
+    jun_tree_node_count(t->left);
+    jun_tree_node_count(t->right);
+  }
 
-	if (root->left){
-		res += tree_depth(root->left);
-	}else if (root->right){
-		res += tree_depth(root->right);
-	}
+  return count;
+}
 
-	return res;
+int jun_tree_depth(TreeNode *root) {
+  int depth = 0;
+  if (root != NULL) {
+    int left_depth = jun_tree_depth(root->left);
+    int right_depth = jun_tree_depth(root->right);
+    depth = left_depth >= right_depth ? left_depth + 1 : right_depth + 1;
+  }
+  return depth;
 }

@@ -8,24 +8,28 @@ typedef struct TreeNode{
 }TreeNode;
 
 #define TYPE int
-#define END  -1
-int tree_node_count(TreeNode *t);
+#define END -1
 
-void tree_balance_insert(TreeNode **t, TYPE val);
+int jun_tree_node_count(TreeNode *t);
 
-void tree_create_by_sequence(TreeNode** t);
+int jun_tree_leaf_node_count(TreeNode *t);
 
-void tree_preorder_print(TreeNode *t);
+void jun_tree_balance_insert(TreeNode **t, TYPE val);
 
-void tree_inorder_print(TreeNode *t);
+void jun_tree_create_by_sequence(TreeNode **t);
 
-void tree_postorder_print(TreeNode *t);
+void jun_tree_preorder_visit(TreeNode *t);
 
-int tree_depth(TreeNode* t);
-void tree_delete_node(TreeNode **t, TYPE val);
+void jun_tree_inorder_visit(TreeNode *t);
 
-TreeNode* node_create(int val);
+void jun_tree_postorder_visit(TreeNode *t);
 
-TreeNode* tree_search(TreeNode **t, TYPE key);
+int jun_tree_depth(TreeNode *t);
+
+void jun_tree_delete_node(TreeNode **t, TYPE val);
+
+TreeNode *jun_node_create(TYPE val);
+
+TreeNode *jun_tree_search(TreeNode **t, TYPE key);
 
 #endif
