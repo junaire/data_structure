@@ -18,11 +18,11 @@ void jun_tree_balance_insert(TreeNode **t, TYPE val);
 
 void jun_tree_create_by_sequence(TreeNode **t);
 
-void jun_tree_preorder_visit(TreeNode *t);
+void jun_tree_preorder_visit(TreeNode *t, void (*visitor)(TreeNode*));
 
-void jun_tree_inorder_visit(TreeNode *t);
+void jun_tree_inorder_visit(TreeNode *t, void (*visitor)(TreeNode*));
 
-void jun_tree_postorder_visit(TreeNode *t);
+void jun_tree_postorder_visit(TreeNode *t, void (*visitor)(TreeNode*));
 
 int jun_tree_depth(TreeNode *t);
 

@@ -62,34 +62,43 @@ TreeNode *jun_tree_search(TreeNode **t, TYPE key) {
   }
 }
 
-void jun_tree_preorder_visit(TreeNode *t) {
-  printf("%d\n", t->value);
+void jun_tree_preorder_visit(TreeNode *t, void (*visitor)(TreeNode *)) {
+  if (t == NULL) {
+    return;
+  }
+  visitor(t);
   if (t->left) {
-    tree_preorder_print(t->left);
+    jun_tree_preorder_visit(t->left, visitor);
   }
   if (t->right) {
-    tree_preorder_print(t->right);
+    jun_tree_preorder_visit(t->right, visitor);
   }
 }
 
-void jun_tree_inorder_visit(TreeNode *t) {
-  if (t->left) {
-    jun_tree_inorder_visit(t->left);
+void jun_tree_inorder_visit(TreeNode *t, void (*visitor)(TreeNode *)) {
+  if (t == NULL) {
+    return;
   }
-  printf("%d\n", t->value);
+  if (t->left) {
+    jun_tree_inorder_visit(t->left, visitor);
+  }
+  visitor(t);
   if (t->right) {
-    jun_tree_inorder_visit(t->right);
+    jun_tree_inorder_visit(t->right, visitor);
   }
 }
 
-void jun_tree_postorder_visit(TreeNode *t) {
+void jun_tree_postorder_visit(TreeNode *t, void (*visitor)(TreeNode *)) {
+  if (t == NULL) {
+    return;
+  }
   if (t->left) {
-    jun_tree_preorder_visit(t->left);
+    jun_tree_preorder_visit(t->left, visitor);
   }
   if (t->right) {
-    jun_tree_preorder_visit(t->right);
+    jun_tree_preorder_visit(t->right, visitor);
   }
-  printf("%d\n", t->value);
+  visitor(t);
 }
 
 int jun_tree_leaf_node_count(TreeNode *t) {
