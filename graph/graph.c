@@ -3,91 +3,103 @@
 #include <stdlib.h>
 #include <string.h>
 
-Graph* Graph_create(GraphKind kind) {
-  Graph* graph = (Graph*)malloc(sizeof(Graph));
-  graph->kind = kind;
-  graph->vexNum = graph->arcNum = 0;
+static Edge* jun_edge_create(int start, int end, int weight) {
+  Edge* edge = malloc(sizeof(Edge));
+  edge->start = start;
+  edge->end = end;
+  edge->weight = weight;
+
+  return edge;
+}
+
+static void jun_edge_destroy(Edge* edge) {
+  free(edge);
+  edge = NULL;
+}
+
+static BaseGraph* jun_base_graph_create_internal(int vertex_number,
+                                                 GraphKind kind) {
+  BaseGraph* base_graph = malloc(sizeof(BaseGraph));
+  base_graph->vertex_number = vertex_number;
+  base_graph->edge_number = 0;
+  base_graph->kind = kind;
+
+  base_graph->marks = malloc(sizeof(VisitFlag) * vertex_number);
+  for (int i = 0; i < vertex_number; ++i) {
+    base_graph->marks[i] = Unvisited;
+  }
+
+  return base_graph;
+}
+
+static void jun_base_graph_destroy_internal(BaseGraph* base_graph) {
+  free(base_graph->marks);
+  free(base_graph);
+  base_graph = NULL;
+}
+
+AdjGraph* jun_adj_graph_create(int vertex_number, GraphKind kind) {
+  AdjGraph* graph = malloc(sizeof(AdjGraph));
+  graph->base_graph = jun_base_graph_create_internal(vertex_number, kind);
+
+  graph->matrix = malloc(sizeof(int*) * vertex_number);
+
+  for (int i = 0; i < vertex_number; ++i) {
+    graph->matrix[i] = malloc(sizeof(int) * vertex_number);
+  }
+
   return graph;
 }
 
-void Graph_destroy(Graph* graph) { free(graph); }
-
-VexNode Graph_getVex(Graph* graph, int v) { return graph->vertices[v]; }
-
-void Graph_putVex(Graph* graph, int v, VexValueType value) {
-  graph->vertices[v].value = value;
-}
-
-ArcNode* Graph_getFirstArc(Graph* graph, int v) {
-  return graph->vertices[v].firstArc;
-}
-
-void Graph_insertVex(Graph* graph, VexNode* vex) {
-  graph->vertices[graph->vexNum] = *vex;
-  graph->vexNum++;
-}
-
-void Graph_deleteVex(Graph* graph, int v) {
-  ArcNode* arc = graph->vertices[v].firstArc;
-  ArcNode* next = arc->nextArc;
-  while (next != NULL) {
-    free(arc);
-    arc = next;
-    next = next->nextArc;
+void jun_adj_graph_destroy(AdjGraph* graph) {
+  for (int i = 0; i < graph->base_graph->vertex_number; i++) {
+    free(graph->matrix[i]);
   }
-  memmove(graph->vertices + v, graph->vertices + v + 1,
-          sizeof(VexNode) * (MAX_VERTEX_NUM - v - 1));
+  free(graph->matrix);
 
-  graph->vexNum--;
+  jun_base_graph_destroy_internal(graph->base_graph);
+  free(graph);
+  graph = NULL;
 }
 
-void Graph_insertArc(Graph* graph, int v, int w) {
-  ArcNode* iter = graph->vertices[v].firstArc;
-  while (iter->nextArc != NULL) {
-    iter = iter->nextArc;
-  }
-  ArcNode* last = (ArcNode*)malloc(sizeof(ArcNode));
-  last->nextArc = NULL;
-  last->adjVex = w;
-  last->weight = 0;
-
-  iter->nextArc = last;
-
-  if (graph->kind == Undirected) {
-    ArcNode* iter = graph->vertices[w].firstArc;
-    while (iter->nextArc != NULL) {
-      iter = iter->nextArc;
+Edge* jun_adj_graph_first_edge(AdjGraph* adj_graph, int one_vertex) {
+  for (int i = 0; i < adj_graph->base_graph->vertex_number; ++i) {
+    if (adj_graph->matrix[one_vertex][i] != 0) {
+      return jun_edge_create(one_vertex, i, adj_graph->matrix[one_vertex][i]);
     }
-    ArcNode* last = (ArcNode*)malloc(sizeof(ArcNode));
-    last->nextArc = NULL;
-    last->adjVex = v;
-    last->weight = 0;
+  }
+  return NULL;
+}
 
-    iter->nextArc = last;
+Edge* jun_adj_graph_next_edge(AdjGraph* adj_graph, Edge* edge) {
+  for (int i = edge->end + 1; i < adj_graph->base_graph->vertex_number; ++i) {
+    if (adj_graph->matrix[edge->start][i] != 0) {
+      return jun_edge_create(edge->start, i, adj_graph->matrix[edge->start][i]);
+    }
+  }
+  return NULL;
+}
+
+void jun_adj_graph_set_edge(AdjGraph* adj_graph, int start, int end,
+                            int weight) {
+  if (adj_graph->matrix[start][end] == 0) {
+    adj_graph->base_graph->edge_number++;
+  }
+
+  adj_graph->matrix[start][end] = weight;
+
+  if (adj_graph->base_graph->kind == Undirected) {
+    adj_graph->matrix[end][start] = weight;
   }
 }
 
-void Graph_deleteArc(Graph* graph, int v, int w) {
-  ArcNode* iter = graph->vertices[v].firstArc;
-  ArcNode* tmp = iter;
-  while (iter->nextArc != NULL) {
-    if (iter->adjVex == w) {
-      tmp->nextArc = iter->nextArc;
-      free(iter);
-    }
-    tmp = iter;
-    iter = iter->nextArc;
+void jun_adj_graph_delete_edge(AdjGraph* adj_graph, int start, int end) {
+  if (adj_graph->matrix[start][end] != 0) {
+    adj_graph->base_graph->edge_number--;
   }
+  adj_graph->matrix[start][end] = 0;
 
-  if (graph->kind == Undirected) {
-    ArcNode* iter = graph->vertices[w].firstArc;
-    while (iter->nextArc != NULL) {
-      if (iter->adjVex == v) {
-        tmp->nextArc = iter->nextArc;
-        free(iter);
-      }
-      tmp = iter;
-      iter = iter->nextArc;
-    }
+  if (adj_graph->base_graph->kind == Undirected) {
+    adj_graph->matrix[end][start] = 0;
   }
 }
