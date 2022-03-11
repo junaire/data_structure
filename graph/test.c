@@ -69,4 +69,8 @@ int main() {
   printf("DFS:\n");
   jun_list_graph_dfs(list_graph, graph_visitor);
   printf("\n");
+
+  jun_adj_graph_destroy(adj_graph);
+
+  jun_list_graph_destroy(list_graph);
 }

@@ -132,8 +132,6 @@ ListGraph* jun_list_graph_create(int vertex_number, GraphKind kind) {
 }
 
 void jun_list_graph_destroy(ListGraph* list_graph) {
-  jun_base_graph_destroy_internal(list_graph->base_graph);
-
   for (int i = 0; i < list_graph->base_graph->vertex_number; ++i) {
     Vertex* iter = list_graph->vertex_list[i];
     while (iter != NULL) {
@@ -142,6 +140,8 @@ void jun_list_graph_destroy(ListGraph* list_graph) {
       iter = tmp;
     }
   }
+
+  jun_base_graph_destroy_internal(list_graph->base_graph);
 }
 
 static void jun_list_graph_set_edge_internal(ListGraph* list_graph, int beg,
@@ -232,7 +232,7 @@ void jun_list_graph_dfs(ListGraph* list_graph,
 
       Vertex* iter = list_graph->vertex_list[start]->next;
       while (iter != NULL) {
-        if (list_graph->base_graph->marks[iter->index] == 0) {
+        if (list_graph->base_graph->marks[iter->index] == Unvisited) {
           start = iter->index;
           break;
         }
