@@ -288,20 +288,22 @@ void jun_adj_graph_prim(AdjGraph* adj_graph) {
 }
 
 void jun_adj_graph_kruscal(AdjGraph* adj_graph) {
-  int belongs[1024];
-  int i, j, cno1, cno2;
-
+  int start, end;
   int edge_list_n = 0;
   int span_list_n = 0;
   int cost = 0;
 
   int vertex_number = adj_graph->base_graph->vertex_number;
+  int belongs[vertex_number];
+  memset(belongs, 0, vertex_number);
 
   Edge** edge_list = malloc(sizeof(Edge*) * 1024);
   Edge** span_list = malloc(sizeof(Edge*) * 1024);
 
-  for (i = 1; i < vertex_number; i++) {
-    for (j = 0; j < i; j++) {
+  // store all edges in a list
+  for (int i = 1; i < vertex_number; i++) {
+    for (int j = 0; j < i; j++) {
+      // if it is a valid edge
       if (adj_graph->matrix[i][j] != 0) {
         edge_list[edge_list_n] = jun_edge_create(i, j, adj_graph->matrix[i][j]);
         edge_list_n++;
@@ -309,9 +311,8 @@ void jun_adj_graph_kruscal(AdjGraph* adj_graph) {
     }
   }
 
-  // Sort the edge list
-  Edge* tmp;
-
+  // sort the edge list by their weight
+  Edge* tmp = NULL;
   for (int i = 1; i < edge_list_n; ++i) {
     for (int j = 0; j < i; ++j) {
       if (edge_list[j]->weight > edge_list[j + 1]->weight) {
@@ -322,22 +323,25 @@ void jun_adj_graph_kruscal(AdjGraph* adj_graph) {
     }
   }
 
-  for (i = 0; i < vertex_number; i++) belongs[i] = i;
+  for (int i = 0; i < vertex_number; i++) belongs[i] = i;
 
-  for (i = 0; i < edge_list_n; i++) {
-    cno1 = belongs[edge_list[i]->start];
-    cno2 = belongs[edge_list[i]->end];
+  for (int i = 0; i < edge_list_n; i++) {
+    // always choose the shortest path from the ordered edge list.
+    start = belongs[edge_list[i]->start];
+    end = belongs[edge_list[i]->end];
 
-    if (cno1 != cno2) {
+    // it is not a circle
+    if (start != end) {
       span_list[span_list_n] = edge_list[i];
       span_list_n++;
 
-      for (i = 1; i < vertex_number; i++)
-        if (belongs[i] == cno2) belongs[i] = cno1;
+      // TODO: What does this mean?
+      for (int j = 1; j < vertex_number; j++)
+        if (belongs[j] == end) belongs[j] = start;
     }
   }
 
-  for (i = 0; i < span_list_n; i++) {
+  for (int i = 0; i < span_list_n; i++) {
     printf("%d %d %d\n", span_list[i]->start, span_list[i]->end,
            span_list[i]->weight);
     cost = cost + span_list[i]->weight;
