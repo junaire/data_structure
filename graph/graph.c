@@ -251,31 +251,26 @@ void jun_graph_clear_visit_flag(BaseGraph* graph) {
 
 void jun_adj_graph_prim(AdjGraph* adj_graph) {
   int cost = 0;
-  int no_edge = 0;
-  int selected[adj_graph->base_graph->vertex_number];
+  int selected[adj_graph->base_graph->vertex_number];  // a helper array to
+                                                       // store selected edges
   memset(selected, 0, sizeof(selected));
 
-  selected[0] = 1;
+  selected[0] = 1;  // the first edge is always in the set
 
-  int x;  //  row number
-  int y;  //  col number
+  int x = 0;
+  int y = 0;
 
-  while (no_edge < adj_graph->base_graph->vertex_number - 1) {
-    // For every vertex in the set S, find the all adjacent vertices
-    // , calculate the distance from the vertex selected at step 1.
-    // if the vertex is already in the set S, discard it otherwise
-    // choose another vertex nearest to selected vertex  at step 1.
-
+  for (int no_edge = 0; no_edge < adj_graph->base_graph->vertex_number - 1;
+       no_edge++) {
     int min = INT_MAX;
-    x = 0;
-    y = 0;
 
     for (int i = 0; i < adj_graph->base_graph->vertex_number; i++) {
+      // if the edge is in the selected set
       if (selected[i]) {
+        // if the choosen edge is not in the selected set and is a vaild one
         for (int j = 0; j < adj_graph->base_graph->vertex_number; j++) {
-          if (!selected[j] &&
-              adj_graph
-                  ->matrix[i][j]) {  // not in selected and there is an edge
+          if (!selected[j] && adj_graph->matrix[i][j]) {
+            // find the minimal edge
             if (min > adj_graph->matrix[i][j]) {
               min = adj_graph->matrix[i][j];
               x = i;
@@ -288,7 +283,6 @@ void jun_adj_graph_prim(AdjGraph* adj_graph) {
     printf("%d %d %d\n", x, y, adj_graph->matrix[x][y]);
     cost += adj_graph->matrix[x][y];
     selected[y] = 1;
-    no_edge++;
   }
   printf("%d\n", cost);
 }
