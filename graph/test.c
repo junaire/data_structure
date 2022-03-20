@@ -70,6 +70,12 @@ int main() {
   jun_list_graph_dfs(list_graph, graph_visitor);
   printf("\n");
 
+  printf("Prim:\n");
+  jun_adj_graph_prim(adj_graph);
+
+  printf("Kruscal:\n");
+  jun_adj_graph_kruscal(adj_graph);
+
   jun_adj_graph_destroy(adj_graph);
 
   jun_list_graph_destroy(list_graph);

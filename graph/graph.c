@@ -1,5 +1,6 @@
 #include "graph.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -246,4 +247,106 @@ void jun_graph_clear_visit_flag(BaseGraph* graph) {
   for (int i = 0; i < graph->vertex_number; ++i) {
     graph->marks[i] = Unvisited;
   }
+}
+
+void jun_adj_graph_prim(AdjGraph* adj_graph) {
+  int cost = 0;
+  int no_edge = 0;
+  int selected[adj_graph->base_graph->vertex_number];
+  memset(selected, 0, sizeof(selected));
+
+  selected[0] = 1;
+
+  int x;  //  row number
+  int y;  //  col number
+
+  while (no_edge < adj_graph->base_graph->vertex_number - 1) {
+    // For every vertex in the set S, find the all adjacent vertices
+    // , calculate the distance from the vertex selected at step 1.
+    // if the vertex is already in the set S, discard it otherwise
+    // choose another vertex nearest to selected vertex  at step 1.
+
+    int min = INT_MAX;
+    x = 0;
+    y = 0;
+
+    for (int i = 0; i < adj_graph->base_graph->vertex_number; i++) {
+      if (selected[i]) {
+        for (int j = 0; j < adj_graph->base_graph->vertex_number; j++) {
+          if (!selected[j] &&
+              adj_graph
+                  ->matrix[i][j]) {  // not in selected and there is an edge
+            if (min > adj_graph->matrix[i][j]) {
+              min = adj_graph->matrix[i][j];
+              x = i;
+              y = j;
+            }
+          }
+        }
+      }
+    }
+    printf("%d %d %d\n", x, y, adj_graph->matrix[x][y]);
+    cost += adj_graph->matrix[x][y];
+    selected[y] = 1;
+    no_edge++;
+  }
+  printf("%d\n", cost);
+}
+
+void jun_adj_graph_kruscal(AdjGraph* adj_graph) {
+  int belongs[1024];
+  int i, j, cno1, cno2;
+
+  int edge_list_n = 0;
+  int span_list_n = 0;
+  int cost = 0;
+
+  int vertex_number = adj_graph->base_graph->vertex_number;
+
+  Edge** edge_list = malloc(sizeof(Edge*) * 1024);
+  Edge** span_list = malloc(sizeof(Edge*) * 1024);
+
+  for (i = 1; i < vertex_number; i++) {
+    for (j = 0; j < i; j++) {
+      if (adj_graph->matrix[i][j] != 0) {
+        edge_list[edge_list_n] = jun_edge_create(i, j, adj_graph->matrix[i][j]);
+        edge_list_n++;
+      }
+    }
+  }
+
+  // Sort the edge list
+  Edge* tmp;
+
+  for (int i = 1; i < edge_list_n; ++i) {
+    for (int j = 0; j < i; ++j) {
+      if (edge_list[j]->weight > edge_list[j + 1]->weight) {
+        tmp = edge_list[j];
+        edge_list[j] = edge_list[j + 1];
+        edge_list[j + 1] = tmp;
+      }
+    }
+  }
+
+  for (i = 0; i < vertex_number; i++) belongs[i] = i;
+
+  for (i = 0; i < edge_list_n; i++) {
+    cno1 = belongs[edge_list[i]->start];
+    cno2 = belongs[edge_list[i]->end];
+
+    if (cno1 != cno2) {
+      span_list[span_list_n] = edge_list[i];
+      span_list_n++;
+
+      for (i = 1; i < vertex_number; i++)
+        if (belongs[i] == cno2) belongs[i] = cno1;
+    }
+  }
+
+  for (i = 0; i < span_list_n; i++) {
+    printf("%d %d %d\n", span_list[i]->start, span_list[i]->end,
+           span_list[i]->weight);
+    cost = cost + span_list[i]->weight;
+  }
+  printf("%d\n", cost);
 }

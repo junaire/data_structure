@@ -103,4 +103,8 @@ void jun_list_graph_dfs(ListGraph* list_graph, void (*visitor)(Vertex* vertex));
 
 void jun_graph_clear_visit_flag(BaseGraph* base_graph);
 
+void jun_adj_graph_prim(AdjGraph* adj_graph);
+
+void jun_adj_graph_kruscal(AdjGraph* adj_graph);
+
 #endif
