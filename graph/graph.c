@@ -348,3 +348,97 @@ void jun_adj_graph_kruscal(AdjGraph* adj_graph) {
   }
   printf("%d\n", cost);
 }
+
+void jun_adj_graph_dijkstra(AdjGraph* adj_graph, int start_vertex) {
+  int distance[1024];
+  int path[1024];
+  int s[1024];
+  int apath[1024];
+  int min;
+
+  int MAX = 9999;  // can't use INT_MAX or will overflow.
+
+  int vertex_number = adj_graph->base_graph->vertex_number;
+
+  // initialize the graph for Dijkstra algorithm.
+  for (int i = 0; i < vertex_number; ++i) {
+    for (int j = 0; j < vertex_number; ++j) {
+      // we don't allow circles here.
+      if (i == j) {
+        adj_graph->matrix[i][j] = 0;
+      } else {
+        // mark it as unreachable
+        if (adj_graph->matrix[i][j] == 0) {
+          adj_graph->matrix[i][j] = MAX;
+        }
+      }
+    }
+  }
+
+  for (int i = 0; i < vertex_number; ++i) {
+    distance[i] = adj_graph->matrix[start_vertex][i];
+    if (distance[i] != MAX) {
+      path[i] = start_vertex;
+    } else {
+      path[i] = -1;
+    }
+  }
+
+  for (int i = 0; i < vertex_number; ++i) {
+    s[i] = 0;
+  }
+
+  s[start_vertex] = 1;
+
+  for (int i = 1; i < vertex_number; ++i) {
+    // find the shortest path
+    int Min = MAX;
+    for (int j = 0; j < vertex_number; j++) {
+      if ((s[j] == 0) && distance[j] < Min) {
+        Min = distance[j];
+        min = j;
+      }
+    }
+
+    s[min] = 1;
+
+    for (int k = 0; k < vertex_number; ++k) {
+      if ((s[k] == 0) &&
+          (distance[k] > distance[min] + adj_graph->matrix[min][k])) {
+        distance[k] = distance[min] + adj_graph->matrix[min][k];
+        path[k] = min;
+      }
+    }
+  }
+
+  // print out
+  for (int i = 0; i < vertex_number; ++i) {
+    if (s[i] == 1 && i != start_vertex) {
+      if (distance[i] == MAX) {
+        continue;
+      }
+      // the cost
+      printf("%d ", distance[i]);
+
+      int d = 0;
+      apath[d] = i;
+      int k = path[i];
+
+      // if there's way to get there, print it, or we just discard it.
+      if (k != -1) {
+        while (k != start_vertex) {
+          d++;
+          apath[d] = k;
+          k = path[k];
+        }
+        d++;
+        apath[d] = start_vertex;
+        printf("%d", apath[d]);
+        for (int j = d - 1; j >= 0; j--) {
+          printf(" %d", apath[j]);
+        }
+        printf("\n");
+      }
+    }
+  }
+}

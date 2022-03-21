@@ -107,4 +107,6 @@ void jun_adj_graph_prim(AdjGraph* adj_graph);
 
 void jun_adj_graph_kruscal(AdjGraph* adj_graph);
 
+void jun_adj_graph_dijkstra(AdjGraph* adj_graph, int start_vertex);
+
 #endif
