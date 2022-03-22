@@ -13,6 +13,7 @@ Vector* jun_vector_init() {
 
 void jun_vector_clear(Vector* vector) {
   free(vector->data);
+  vector->data = NULL;
   vector->cap = 0;
   vector->len = 0;
 }
@@ -112,8 +113,8 @@ void jun_vector_reverse(Vector* vector) {
     *beg = *end;
     *end = tmp;
 
-	beg++;
-	end--;
+    beg++;
+    end--;
   }
 }
 
